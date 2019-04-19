@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CsController!{% endblock %}
+
+
+
+{% block body %}
+
+
+    {{ form_start(formCollege)  }}
+
+    <div class="jumbotron">
+        <div class="container">
+            <div id="college">
+                {{ form_widget(formCollege.nom) }}
+            </div>
+            
+
+            <button type="submit" class="btn btn-warning">Valider</button>
+            
+        </div>
+    </div>
+    {{ form_end(formCollege)  }}
+
+    {{ name_college }}
+    {{ x }}
+    {{ y }}
+    </br>
+
+    
+
+   
+
+  
+{% endblock %}
