@@ -10,6 +10,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -19,7 +20,7 @@ class CsController extends AbstractController
 {
 
     /**
-     * @Route("/cs", name="cs", methods={"POST"})
+     * @Route("/cs", name="cs", methods={"GET" , "POST"})
      */
     public function index(Request $request, ObjectManager $manager)
     {
@@ -47,18 +48,27 @@ class CsController extends AbstractController
                 foreach($repos as $repo){
                     $stop_lat = $repo->getStopLat();
                     $stop_lon = $repo->getStopLon();
+                
+                    if($stop_lat && $stop_lon){
+                        $rawSql = "SELECT DISTINCT (6378 * acos(cos(radians($y)) * cos(radians($stop_lat)) * cos(radians($stop_lon) - radians($x)) + sin(radians($y)) * sin(radians($stop_lat)))) AS distance FROM stop HAVING distance < 0.3 ORDER BY distance";
+
+                        $em = $this->getDoctrine()->getManager();
+                        $name = $em->getConnection()->prepare($rawSql);
+                        $name->execute();
+                        $results = $name->fetchAll();
+                        if($results){
+                            foreach($results as $result){
+                                $name_stop = $repo->getStopId();
+                                $name = $repo->getStopName();
+                                
+                                dump($name);
+                            }
+                        }
+                    }
+                    
+                    
                 }
-
-                $rayon_stop = '(6378 * acos(cos(radians(' . $y . ')) * cos(radians('.$stop_lat.')) * cos(radians('.$stop_lon.') - radians(' . $x . ')) + sin(radians(' . $y . ')) * sin(radians('.$stop_lat.'))))';
-
-                $qb = $this->getDoctrine()->createQueryBuilder();
-                $qb->select('stop_id')
-                    ->from(Stop::class, 'stop_id')
-                    ->where(''.$rayon_stop.'< 0.4');
-        
-                    return $qb->getQuery()
-                            ->getResult();
-                dump($qb);
+                
             }
         }
 
