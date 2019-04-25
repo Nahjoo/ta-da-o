@@ -22,19 +22,17 @@ class StopTimeRepository extends ServiceEntityRepository
     // /**
     //  * @return StopTime[] Returns an array of StopTime objects
     //  */
-    /*
-    public function findByExampleField($value)
+
+    public function findByStopId($value)
     {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
+            ->andWhere('s.stop_id = :val')
             ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
+    
 
     /*
     public function findOneBySomeField($value): ?StopTime
