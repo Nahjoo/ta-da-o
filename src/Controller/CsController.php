@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Stop;
+use App\Entity\Trip;
 use App\Entity\College;
 use App\Entity\StopTime;
 use Doctrine\ORM\EntityRepository;
@@ -38,7 +39,7 @@ class CsController extends AbstractController
         $name_college = "";
         $x = "";
         $y = "";
-        set_time_limit (500);
+        
         if($form->isSubmitted() && $form->isValid()){
             if($request->getMethod() == "POST"){
                 $data_college = $form["nom"]->getData();
@@ -61,18 +62,36 @@ class CsController extends AbstractController
                         if($results){
                             foreach($results as $result){
                                 $name_stop = $repo->getStopId();
-                                $name = $repo->getStopName();
-                                $bg = $this->getDoctrine()->getRepository(StopTime::class)->findByStopId($name_stop);
-                                // $req_stop = "SELECT DISTINCT trip_id FROM stop_time WHERE stop_time.stop_id = ". $name_stop." ";
-                                // $em = $this->getDoctrine()->getManager();
-                                // $name = $em->getConnection()->prepare($req_stop);
-                                // $name->execute();
-                                // $results = $name->fetchAll();
-                                // foreach($repos as $repo){
-                                //     dump($repo);
+
+                                $stop_times = $this->getDoctrine()->getRepository(StopTime::class)->findByStopId($name_stop);
+                                foreach($stop_times as $stop_time){
+                                    $trip = $stop_time->getTripId();
+                                    $table_trips = $this->getDoctrine()->getRepository(Trip::class)->findByTripId($trip);
                                     
-                                // }
-                                dump($bg);
+                                    foreach($table_trips as $table_trip){
+                                        $cs = $table_trip->getRouteId();
+                                        $cs_trip = $table_trip->getTripId();
+                                        $tableau_routes_id = [];
+                                        
+                                    
+                                        foreach($tableau_routes_id as $tableau){
+                                            
+                                            if($tableau == $cs){
+                                                $var = "cs existe déjà";
+                                                
+                                            }else {
+                                                array_push($tableau_routes_id, "$cs");
+                                                dump($tableau_routes_id);
+                                            }
+                                        }
+                                        
+                                        // $cs_stopsId = $this->getDoctrine()->getRepository(StopTime::class)->findByTripId($cs_trip);
+                                        // foreach($cs_stopsId as $cs_stopId){
+                                        //     $cs_stopName = $cs_stopId->getStopId();
+                                        //     dump($cs_stopName);
+                                        // }
+                                    }
+                                }
                             }
                         }
                     }   

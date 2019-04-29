@@ -22,19 +22,17 @@ class TripRepository extends ServiceEntityRepository
     // /**
     //  * @return Trip[] Returns an array of Trip objects
     //  */
-    /*
-    public function findByExampleField($value)
+    
+    public function findByTripId($value)
     {
         return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
+            ->andWhere('t.trip_id = :val')
             ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
+
 
     /*
     public function findOneBySomeField($value): ?Trip
